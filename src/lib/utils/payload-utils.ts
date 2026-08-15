@@ -1,4 +1,4 @@
-import type { Asset, Page, Tenant, IButton } from '@payload-types';
+import type { Asset, Page, Tenant, IButton, IIcon } from '@payload-types';
 import { defaultLocale, site, type SiteConfigType } from '@/config';
 import { error } from '@sveltejs/kit';
 import { buttonVariants } from '@/components/ui/button';
@@ -84,6 +84,24 @@ export async function resolveID({
   return Promise.resolve(data);
 }
 
+
+
+// overflow:${style?.overflow ?? ""};
+export const richTextIcon = ({ name, style }: IIcon) =>
+  `<iconify-icon
+    width="${style?.width}"
+    height="${style?.height}"
+    style="
+          width:${style?.width ?? "100%"};
+          height:${style?.width ?? "100%"};
+          background:${style?.background ?? ""};
+          color:${style?.color ?? "var(--foreground)"};
+          border:${style?.border ?? ""};
+          border-radius:${style?.borderRadius ?? ""};
+          ${style?.string ?? ""}"
+    icon="${name}">
+  </iconify-icon>`
+
 // export const richTextImg = ({ image }: { image: Asset }) => {
 export const richTextImg = (src: string) => {
 
@@ -103,7 +121,7 @@ export const richTextImg = (src: string) => {
           />`
 };
 
-export const richTextBtn = ({ href, link }: { href: string, link: IButton }) => {
+export const richTextBtn = ({ href, link, newTab }: { href: string, link: IButton, newTab?: boolean }) => {
 
   let { display, style: linkStyle } = link || {};
 
@@ -114,7 +132,10 @@ export const richTextBtn = ({ href, link }: { href: string, link: IButton }) => 
   const { text, variant, size } = display || {}
 
   const classList = buttonVariants({ variant, size })
-  return `<a class="${cn('flex px-4 gap-5', classList)}" style="${style};" href="${href}">
+  return `<a class="${cn('flex px-4 gap-5 mt-2', classList)}"
+             style="${style};"
+             ${newTab ? 'target="_blank" rel="noopener noreferrer"' : ""}
+             href="${href}">
       ${text ?? href.replaceAll("/", "")}
       ${link.display?.includeIcon ? `<iconify-icon icon=${link.display.icon?.name}></iconify-icon>` : ""}
     </a>`

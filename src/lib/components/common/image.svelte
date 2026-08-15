@@ -4,43 +4,63 @@
 	import { cn, resolveID } from '@/utils';
 	import { onMount } from 'svelte';
 	import Sticker from './sticker.svelte';
-	import { animate } from '@/attachments/animations/animate.svelte';
+	import { MediaQuery } from 'svelte/reactivity';
+	import { page } from '$app/state';
 
 	let {
+		ref = $bindable(null),
 		image,
 		class: className,
 		cb,
+		alt: altHardCoded,
 		sizes: _sizes,
 		loading = 'lazy',
 		fetchpriority = 'low'
 	}: {
+		ref?: HTMLImageElement | null;
 		image: IImage['image'];
 		class?: string;
+		alt?: string;
 		cb?: () => void;
-		sizes?: 'string';
+		sizes?: string;
 		loading?: 'eager' | 'lazy' | null | undefined;
 		fetchpriority?: 'low' | 'auto' | 'high' | null | undefined;
 	} = $props();
 
-	let { style, alt, ignoreSizes, animation, sticker } = $derived(image || {});
+	const { locale } = $derived(page.params);
+
+	let { style, alt, mobileStyle, ignoreSizes, arr, link } = $derived(image || {});
 
 	let asset = $derived((image?.url as Asset) || {});
 	onMount(() => cb && cb());
 
+	const mobile = new MediaQuery('max-width: 768px');
 	let loaded = $state(false);
 
-	let { srcset, sizes } = $derived.by(() => {
-		let { srcset, sizes } = Object.values(asset?.sizes ?? {}).reduce(
+	let { srcset } = $derived.by(() => {
+		let { srcset } = Object.values(asset?.sizes ?? {}).reduce(
 			(acc: any, cur: any) => ({
-				srcset: `${acc.srcset ?? ''} ${site.storage}/${encodeURI(cur.filename)} ${cur.width}w,`,
-				sizes: `${acc.sizes ?? ''} (max-width: ${cur.width}px) 100vw, `
+				srcset: `${acc.srcset ?? ''} ${site.storage}/${encodeURI(cur.filename)} ${cur.width}w,`
 			}),
-			{ srcset: '', sizes: '' }
+			{ srcset: '' }
 		);
 		srcset += `${site.storage}/${encodeURI(asset?.filename ?? '')} ${asset?.width}w`;
-		sizes += `${asset?.width}px`; //defaultvalue
 
-		return { srcset, sizes };
+		return { srcset };
+	});
+
+	let href = $derived.by(() => {
+		const { type: urlType, url, reference } = link || {};
+		// custom url
+		if (urlType == 'custom' && url) return url;
+		// internal url
+		if (urlType == 'reference' && reference) {
+			//@ts-ignore
+			const slug = reference.value.slug; //slug is present if depth > 0 because of defaultPopulate
+			return locale ? `/${locale}/${slug}` : `/${slug}`;
+		}
+
+		return null;
 	});
 </script>
 
@@ -66,54 +86,70 @@
 	{/if}
 </svelte:head>
 
-{#if asset?.sizes}
-	<div
-		class:bg-none={loaded}
-		class="relative grid grid-cols-1 grid-rows-1 place-items-center h-full w-full overflow-hidden bg-(image:--placeholder) bg-center bg-cover bg-no-repeat"
-		style:--placeholder={`url(${site.storage}/${asset?.sizes?.placeholder?.filename})`}
-		style:height={style?.height}
-		style:width={style?.width}
-		style:object-fit={style?.objectFit}
-		style:padding={style?.padding}
-		style:border-radius={style?.borderRadius}
-	>
-		<div class:hidden={loaded} class="absolute inset-0 bg-white/40 animate-pulse"></div>
-		{#if ignoreSizes}
-			<img
-				onload={() => (loaded = true)}
-				src={`${site.storage}/${encodeURI(asset?.filename ?? '')}`}
-				class={cn(
-					'object-cover w-full h-full col-start-1 row-start-1 ease-in-out transition-all duration-200',
-					className
-				)}
-				{alt}
-				{loading}
-				{fetchpriority}
-				{@attach animate({ animation })}
-			/>
-		{:else}
-			<img
-				onload={() => (loaded = true)}
-				class={cn(
-					'object-cover w-full h-full col-start-1 row-start-1 ease-in-out transition-all duration-200',
-					className
-				)}
-				style:opacity={loaded ? '100%' : '0'}
-				alt={alt ?? ''}
-				sizes={_sizes ?? sizes}
-				{srcset}
-				{loading}
-				{@attach animate({ animation })}
-			/>
-		{/if}
-		<div
-			style:opacity={style?.opacity}
-			style:background={style?.background}
-			style:mix-blend-mode={style?.mixBlendMode}
-			class="col-start-1 row-start-1 h-full w-full"
-		></div>
-		<div class="col-start-1 relative row-start-1 h-full w-full">
-			<Sticker data={sticker} />
-		</div>
-	</div>
+{#if href}
+	<a {href} target={link.type == 'custom' ? '_blank' : '_self'}>
+		{@render ImageSnippet()}
+	</a>
+{:else}
+	{@render ImageSnippet()}
 {/if}
+
+{#snippet ImageSnippet()}
+	{#if asset?.sizes}
+		<div
+			class:bg-none={loaded}
+			class="relative grid grid-cols-1 grid-rows-1 items-center justify-center h-full w-full bg-(image:--placeholder) bg-center bg-cover bg-no-repeat overflow-hidden"
+			style:--placeholder={`url(${site.storage}/${asset?.sizes?.placeholder?.filename})`}
+			style:height={mobile.current ? (mobileStyle?.height ?? style?.height) : style?.height}
+			style:width={mobile.current ? (mobileStyle?.width ?? style?.width) : style?.width}
+			style:overflow={style?.overflow}
+			style:padding={mobile.current ? mobileStyle?.padding : style?.padding}
+			style:border-radius={style?.borderRadius}
+		>
+			<div class:hidden={loaded} class="absolute inset-0 bg-white/60 animate-pulse"></div>
+			{#if ignoreSizes}
+				<img
+					bind:this={ref}
+					style:object-fit={style?.objectFit}
+					style:object-position={style?.objectPosition}
+					onload={() => (loaded = true)}
+					src={`${site.storage}/${encodeURI(asset?.filename ?? '')}`}
+					class={cn(
+						'object-cover w-full h-full col-start-1 row-start-1 ease-in-out transition-all duration-200',
+						className
+					)}
+					alt={alt ?? altHardCoded ?? ''}
+					{loading}
+					{fetchpriority}
+				/>
+			{:else}
+				<img
+					bind:this={ref}
+					style:object-fit={style?.objectFit}
+					style:object-position={style?.objectPosition}
+					onload={() => (loaded = true)}
+					class={cn(
+						'object-cover w-full h-full col-start-1 row-start-1 ease-in-out transition-all duration-200',
+						className
+					)}
+					style:opacity={loaded ? '100%' : '0'}
+					alt={alt ?? altHardCoded ?? ''}
+					sizes={_sizes ?? style?.sizes ?? `min(${asset?.width}px, 100vw)`}
+					{srcset}
+					{loading}
+				/>
+			{/if}
+			<div
+				style:opacity={style?.opacity}
+				style:background={style?.background}
+				style:mix-blend-mode={style?.mixBlendMode}
+				class="col-start-1 row-start-1 h-full w-full"
+			></div>
+			<div class="col-start-1 relative row-start-1 h-full w-full">
+				{#each arr ?? [] as sticker}
+					<Sticker data={sticker.s} />
+				{/each}
+			</div>
+		</div>
+	{/if}
+{/snippet}

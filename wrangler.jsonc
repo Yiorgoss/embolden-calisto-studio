@@ -4,30 +4,46 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "embolden",
+	//needs to start with string and have only dashes smh
+	"name": "x---domain-name-with-dashes---x",
 	"main": ".svelte-kit/cloudflare/_worker.js",
 	"compatibility_date": "2025-04-30",
 	"compatibility_flags": ["nodejs_compat"],
-	"vars": {
-		"PUBLIC_ENV": "PROD",
-		"PUBLIC_DEV_CMS": "http://localhost:3000",
-		"PUBLIC_PROD_CMS": "https://admin.calisto.studio",
-		"PUBLIC_ASSET_URL": "https://assets.calisto.studio",
-		"PUBLIC_TEST_ASSET_URL": "https://test-assets.calisto.studio",
-		"PUBLIC_DOMAIN_NAME": "embolden.calisto.studio"
-	},
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
-	"kv_namespaces": [
-		{
-			"binding": "CALISTO_STUDIO_KV_CACHE",
-			"id": "222c6845593445efa369f4eda7a02e31",
-			"preview_id": "213ef123d5674ed2b153c1f1c2c25f07"
-		}
-	],
 	"env": {
+		"production": {
+			"vars": {
+				"PUBLIC_ENV": "PROD",
+				"PUBLIC_DEV_CMS": "http://localhost:3000",
+				"PUBLIC_PROD_CMS": "https://admin.calisto.studio",
+				"PUBLIC_ASSET_URL": "https://assets.calisto.studio",
+				"PUBLIC_TEST_ASSET_URL": "https://test-assets.calisto.studio",
+				"PUBLIC_DOMAIN_NAME": "%domainName%"
+			},
+			// "kv_namespaces": [
+			// 	{
+			// 		"binding": "CALISTO_STUDIO_KV_CACHE",
+			// 		"id": "222c6845593445efa369f4eda7a02e31",
+			// 		"preview_id": "213ef123d5674ed2b153c1f1c2c25f07"
+			// 	}
+			// ],
+			"observability": {
+				"enabled": true
+			},
+			"routes": [
+				{
+					"pattern": "%domainName%",
+					"custom_domain": true
+				},
+				{
+					"pattern": "www.%domainName%",
+					"custom_domain": true
+				}
+			]
+		},
 		"staging": {
 			"vars": {
 				"PUBLIC_ENV": "TEST",
@@ -37,34 +53,24 @@
 				"PUBLIC_DOMAIN_NAME": "embolden.calisto.studio",
 				"PUBLIC_TEST_ASSET_URL": "https://test-assets.calisto.studio"
 			},
-			"kv_namespaces": [
-				{
-					"binding": "CALISTO_STUDIO_KV_CACHE", // this is TEST_CALISTO_STUDIO_KV_CACHE in the console
-					"id": "3b03184a78a4489db0e9cf35d6b5a411",
-					"preview_id": "eee2434facbc4ccba5b882b798cc839a"
-				}
-			],
+			// "kv_namespaces": [
+			// 	{
+			// 		"binding": "CALISTO_STUDIO_KV_CACHE", // this is TEST_CALISTO_STUDIO_KV_CACHE in the console
+			// 		"id": "3b03184a78a4489db0e9cf35d6b5a411",
+			// 		"preview_id": "eee2434facbc4ccba5b882b798cc839a"
+			// 	}
+			// ],
 			"routes": [
 				{
 					"pattern": "staging.embolden.calisto.studio",
 					"custom_domain": true
 				}
-			]
+			],
+			"observability": {
+				"enabled": true
+			}
 		}
-	},
-	"observability": {
-		"enabled": true
-	},
-	"routes": [
-		{
-			"pattern": "embolden.calisto.studio",
-			"custom_domain": true
-		},
-		{
-			"pattern": "www.embolden.calisto.studio",
-			"custom_domain": true
-		}
-	]
+	}
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

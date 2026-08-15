@@ -18,33 +18,41 @@
 
 <section
 	id="marquee-block"
-	style:border
 	style:padding
 	style:background
 	style:color
 	class:mask-none={!options?.maskEdges}
 	class="mask-l-from-90% mask-r-from-90% overflow-clip"
 >
-	<a href={(link as Page)?.slug} aria-hidden={!(link as Page)?.slug}>
-		<div
-			style:height
-			style:gap
-			style:animation-duration={options?.duration}
-			class:flex-wrap={prefersReducedMotion.current}
-			class="marquee-default w-max flex justify-center items-center gap-x-10"
-		>
-			{#each [...items!, ...items!] as { image, text }, i}
-				<div aria-hidden={i > items!.length} style:height class="">
-					<Image {image} class="object-contain h-full" />
-				</div>
-				<div style:font aria-hidden={i > items!.length} class="text-nowrap">{text}</div>
-			{/each}
-		</div>
+	<a
+		style:height
+		style:border-top={border}
+		style:border-bottom={border}
+		style:max-height={height}
+		href={(link as Page)?.slug}
+		aria-hidden={!(link as Page)?.slug}
+		class="flex"
+	>
+		{#each { length: 2 }, _}
+			<div
+				style:gap
+				style:animation-duration={options?.duration}
+				class:flex-wrap={prefersReducedMotion.current}
+				class="marquee-default flex flex-wrap justify-around items-center"
+			>
+				{#each items as { image, text }}
+					<div class="w-full h-full">
+						<Image {image} class="h-full object-contain " />
+					</div>
+					<div style:font class="font-semibold text-xl text-nowrap">{text}</div>
+				{/each}
+			</div>
+		{/each}
 	</a>
 </section>
 
 <style>
 	.marquee-default {
-		animation: marquee 40s linear infinite;
+		animation: marquee 50s linear infinite;
 	}
 </style>

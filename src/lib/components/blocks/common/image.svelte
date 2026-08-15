@@ -3,9 +3,22 @@
 	import { cn } from '@/utils';
 	import { type IImage } from '@payload-types';
 
-	const { blockData }: { blockData: IImage } = $props();
+	let {
+		blockData,
+		sizes,
+		ref = $bindable(null)
+	}: { blockData: IImage; sizes?: string; ref?: HTMLElement | null } = $props();
 </script>
 
-<div id="image-block" class="h-full w-full">
-	<Image class="" image={blockData.image} />
+<div
+	id="image-block"
+	style:height={blockData.style?.height}
+	style:width={blockData.style?.width}
+	style:justify-content={blockData.style?.alignX}
+	style:align-items={blockData.style?.alignY}
+	style:margin={blockData.style?.margin}
+	style:overflow={blockData.style?.overflow}
+	class="flex h-fit w-fit max-w-full overflow-hidden"
+>
+	<Image class="h-full w-full" image={blockData.image} {sizes} />
 </div>

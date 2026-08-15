@@ -34,7 +34,7 @@
 		// internal url
 		if (urlType == 'reference' && reference) {
 			//@ts-ignore
-			const slug = reference.value.slug; //slug is present if depth > 0 because of defaultPopulate
+			const slug = reference.value.slug; //== 'home' ? '' : reference.value.slug; //slug is present if depth > 0 because of defaultPopulate
 			return locale ? `/${locale}/${slug}` : `/${slug}`;
 		}
 		// _href has not resolved or resolved undefined
@@ -48,11 +48,12 @@
 	style={`padding=${style?.padding};`}
 	class={cn('wrap-anywhere mx-2', className)}
 	{variant}
+	{size}
 	{href}
 	{...restProps}
 >
 	{#if display?.text || display?.includeIcon}
-		<div class="flex gap-2">
+		<div class:flex-row-reverse={display?.iconStart} class="flex gap-2">
 			<p class="">
 				{display.text}
 			</p>

@@ -6,7 +6,6 @@
 	import { type IImageHeader } from '@payload-types';
 	import { onMount } from 'svelte';
 	import { cn } from '@/utils';
-	import { throttle } from '@/utils';
 	import { page } from '$app/state';
 	import LocaleSwitcher from '@/components/common/locale-switcher.svelte';
 	import { supportedLocales } from '@/config';
@@ -38,6 +37,7 @@
 			<a href={`/${locale ?? ''}`} aria-label="home page" class="">
 				<div class="h-(--header-height) lg:p-2 md:p-4 w-auto">
 					<Image
+						alt="link to homepage"
 						class="object-contain py-2"
 						loading="eager"
 						fetchpriority="high"

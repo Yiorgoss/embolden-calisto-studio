@@ -5,24 +5,30 @@
 	import { cn } from '@/utils';
 	import { MediaQuery } from 'svelte/reactivity';
 
-	const mobile = new MediaQuery('max-width: 480px');
-
 	const { blockData }: { blockData: IStickyContainers; index?: number } = $props();
 	const { list, title, style } = $derived(blockData);
 
+	const mobile = new MediaQuery('max-width: 768px');
 	//  const height = mobile.current ? mobileStyle?.height : style?.height;
 </script>
 
 <section id="sticky-container-root" class="container mx-auto">
-	<div class="relative">
+	<div style:margin={blockData.style?.margin} class="relative">
 		{#each list ?? [] as { richText, image }, i}
 			{@const left = i % 2 == 1}
 
+			<!--  style:top={}  -->
 			<div
-				style:top={`${50 * i + 5}px`}
-				style:background={style?.background}
+				style:border={blockData.style?.border}
+				style:background={style?.multiBg?.bgs?.split(',')[i % style?.multiBg?.k]}
+				style:border-radius={style?.borderRadius}
+				style={true || blockData.stick?.bot
+					? true || (blockData.stick?.mobile && mobile.current)
+						? `z-index:${10 - i};bottom:0;`
+						: `top:${50 * i + 5}px;`
+					: `top:${50 * i + 5}px;`}
 				class={cn(
-					` text-background bg-foreground rounded-theme sticky`,
+					` text-background bg-foreground sticky rounded-3xl `,
 					left && 'bg-background border-foreground border '
 				)}
 			>
@@ -31,10 +37,14 @@
 						{title}
 					</div>
 				{/if}
-				<div class="flex flex-col md:flex-row justify-start items-center">
+				<div
+					style:gap={style?.gap}
+					style:padding={style?.padding}
+					class="flex flex-col md:flex-row justify-start items-center"
+				>
 					<div
 						class:md:order-last={left}
-						class="h-[300px] overflow-hidden md:h-auto w-full md:w-1/2 px-4 py-10 md:px-10"
+						class=" rounded-2xl overflow-hidden md:h-auto w-full md:w-1/2 px-4 py-4 md:px-10"
 					>
 						{#if image}
 							<Image {image} class="" />

@@ -70,7 +70,10 @@ export interface Config {
     rtBlock: IRichText;
     image: IImage;
     gutter: IGutter;
+    gutterv2: IGutterV2;
+    clipGutter: IClipGutter;
     button: IButtonBlock;
+    videoLanding: IVideoLanding;
     blockColumnLayout: IBlockColumnLayout;
     flexboxLayout: IFlexboxLayout;
     calistoFeatureCard: ICalistoFeatureCard;
@@ -79,12 +82,14 @@ export interface Config {
     hoverCard: IHoverCard;
     richTextCard: IRichTextCard;
     cutoutCard: ICutoutCard;
+    textUnderCard: ITextUnderCard;
     bentoGrid: BentoGrid;
     stickyContainers: IStickyContainers;
     accordion: IAccordion;
     carousel: ICarousel;
     marquee: IMarquee;
     flexItem: IFlexItem;
+    wavyText: IWavyText;
     calistoLanding: ICalistoLanding;
     gradientBG: IGradientBG;
     mediumHero: IMediumHero;
@@ -92,20 +97,37 @@ export interface Config {
     heroCutout: IHeroCutout;
     imageHeader: IImageHeader;
     floatingHeader: IFloatingHeader;
+    midFloatHeader: IMidFloadHeader;
     richTextFooter: IRichTextFooter;
     footerDesign2: IFooterDesign2;
+    googleMapFooter: IGoogleMapFooter;
+    footer3: IFooter3;
     pill: IPillRTBlock;
     buttonRT: IImageRTBlock;
     svgText: ISVGText;
     listMarkerIcon: ILexicalMarkerIcon;
+    divider: IDivider;
+    lexIcon: IRTIcon;
+    lexImg: ILexicalImage;
     contactForm: IContactFormBlock;
     emboldenEpubConverter: EmboldenEpubConverterI;
+    googlemaps: IGoogleMaps;
+    textImageSplit: ITextImageSplit;
+    tgkLandingHome: ITGKLandingHome;
+    tgkCard1: ITGKCard1;
+    tgkCard2: ITGKCard2;
+    tgkCard3: ITGKCard3;
+    tgkDoilyCard: ITGKDoilyCard;
+    tgkAccordion: ITGKAccordion;
+    tgkGridIcons: ITGKGridIcons;
+    tgkCardIcons: ITGKCardIcon;
   };
   collections: {
     users: User;
     assets: Asset;
     pages: Page;
     tenants: Tenant;
+    redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-kv': PayloadKv;
@@ -123,6 +145,7 @@ export interface Config {
     assets: AssetsSelect<false> | AssetsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -202,6 +225,7 @@ export interface IRichTextField {
     };
     [k: string]: unknown;
   } | null;
+  img?: IImageField;
   style?: {
     background?: string | null;
     padding?: string | null;
@@ -210,152 +234,12 @@ export interface IRichTextField {
     minHeight?: string | null;
     marker?: string | null;
     textWrap?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
   };
-  animation?: IAnimation;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "IAnimation".
- */
-export interface IAnimation {
-  type?: ('viewport' | 'scroll') | null;
-  /**
-   * Animations that trigger when they enter the page
-   */
-  viewport?:
-    | ('slideFadeFast' | 'slideFadeSlow' | 'slideLetters' | 'bubbleLetters' | 'drawSVG' | 'slideUpFadeIn')[]
-    | null;
-  /**
-   * Stagger animations as they enter
-   */
-  stagger?: boolean | null;
-  /**
-   * Only play animations on enter
-   */
-  onlyEnter?: boolean | null;
-  /**
-   * How much of the element must be viewable before starting animation? 0-1
-   */
-  amount?: string | null;
-  /**
-   * Animations that play as you scroll
-   */
-  scroll?:
-    | ('custom' | 'scale' | 'fadeIn' | 'translateUp' | 'translateDown' | 'drawSVG' | 'lineFlip' | 'fadeInEachWord')[]
-    | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "IButton".
- */
-export interface IButton {
-  type?: ('reference' | 'custom') | null;
-  reference?: {
-    relationTo: 'pages';
-    value: number | Page;
-  } | null;
-  url?: string | null;
-  display?: {
-    variant?: ('default' | 'secondary' | 'outline' | 'ghost' | 'link') | null;
-    size?: ('xs' | 'sm' | 'md' | 'lg' | 'xl') | null;
-    text?: string | null;
-    includeIcon?: boolean | null;
-    icon?: IIcon;
+  mobileStyle?: {
+    textAlign?: string | null;
   };
-  style?: {
-    padding?: string | null;
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: number;
-  tenant?: (number | null) | Tenant;
-  title?: string | null;
-  slug?: string | null;
-  'tenant-domain'?: string | null;
-  hero?: (IGradientBG | IMediumHero | ICalistoLanding | IScrollGrowLanding | IHeroCutout | IBlockColumnLayout)[] | null;
-  layout?:
-    | (
-        | IInfoBanner
-        | IButtonBlock
-        | IRichText
-        | IImage
-        | IGutter
-        | IStickyContainers
-        | BentoGrid
-        | IAccordion
-        | ICarousel
-        | IFlexItem
-        | IBlockColumnLayout
-        | IFlexboxLayout
-        | ICalistoFeatureCard
-        | IDiscountCard
-        | ISingleCard
-        | IHoverCard
-        | ICutoutCard
-        | IRichTextCard
-        | IGradientBG
-        | IMediumHero
-        | IScrollGrowLanding
-        | IHeroCutout
-        | IContactFormBlock
-        | IMarquee
-        | EmboldenEpubConverterI
-      )[]
-    | null;
-  meta?: ISEO;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tenants".
- */
-export interface Tenant {
-  id: number;
-  name: string;
-  /**
-   * Used for domain-based tenant handling
-   */
-  domain?: string | null;
-  pages?: {
-    docs?: (number | Page)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  nav?: INavigation;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "INavigation".
- */
-export interface INavigation {
-  header?: (IImageHeader | IFloatingHeader)[] | null;
-  footer?: (IRichTextFooter | IFooterDesign2)[] | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "IImageHeader".
- */
-export interface IImageHeader {
-  image?: IImageField;
-  nav?:
-    | {
-        link?: IButton;
-        id?: string | null;
-      }[]
-    | null;
-  style?: {
-    hasShadow?: boolean | null;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'imageHeader';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -372,12 +256,24 @@ export interface IImageField {
     height?: string | null;
     width?: string | null;
     objectFit?: string | null;
+    objectPosition?: string | null;
     padding?: string | null;
     borderRadius?: string | null;
     sizes?: string | null;
+    overflow?: string | null;
   };
-  animation?: IAnimation;
-  sticker?: IStickerField;
+  mobileStyle?: {
+    height?: string | null;
+    width?: string | null;
+    padding?: string | null;
+  };
+  link?: IButton;
+  arr?:
+    | {
+        s?: IStickerField;
+        id?: string | null;
+      }[]
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -441,26 +337,131 @@ export interface Asset {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "IStickerField".
+ * via the `definition` "IButton".
  */
-export interface IStickerField {
-  url?: (number | null) | Asset;
+export interface IButton {
+  type?: ('reference' | 'custom') | null;
+  reference?: {
+    relationTo: 'pages';
+    value: number | Page;
+  } | null;
+  url?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  title?: string | null;
+  slug?: string | null;
+  'tenant-domain'?: string | null;
+  hero?:
+    | (
+        | IGradientBG
+        | IMediumHero
+        | ICalistoLanding
+        | IScrollGrowLanding
+        | IHeroCutout
+        | IBlockColumnLayout
+        | ITextImageSplit
+        | ITGKLandingHome
+        | IVideoLanding
+      )[]
+    | null;
+  layout?:
+    | (
+        | IInfoBanner
+        | IButtonBlock
+        | IRichText
+        | IImage
+        | IGutter
+        | IGutterV2
+        | IClipGutter
+        | IStickyContainers
+        | BentoGrid
+        | IAccordion
+        | ICarousel
+        | IFlexItem
+        | IWavyText
+        | IBlockColumnLayout
+        | IFlexboxLayout
+        | ICalistoFeatureCard
+        | IDiscountCard
+        | ISingleCard
+        | IHoverCard
+        | ICutoutCard
+        | IRichTextCard
+        | ITextUnderCard
+        | IGradientBG
+        | IMediumHero
+        | IScrollGrowLanding
+        | IHeroCutout
+        | IContactFormBlock
+        | IMarquee
+        | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKLandingHome
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKDoilyCard
+        | ITGKCardIcon
+        | ITGKAccordion
+        | ITGKGridIcons
+      )[]
+    | null;
+  meta?: ISEO;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants".
+ */
+export interface Tenant {
+  id: number;
+  name: string;
+  /**
+   * Used for domain-based tenant handling
+   */
+  domain?: string | null;
+  pages?: {
+    docs?: (number | Page)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  nav?: INavigation;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "INavigation".
+ */
+export interface INavigation {
+  header?: (IImageHeader | IFloatingHeader | IMidFloadHeader)[] | null;
+  footer?: (IRichTextFooter | IFooterDesign2 | IGoogleMapFooter | IFooter3)[] | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IImageHeader".
+ */
+export interface IImageHeader {
+  image?: IImageField;
+  nav?:
+    | {
+        link?: IButton;
+        id?: string | null;
+      }[]
+    | null;
   style?: {
-    top?: string | null;
-    left?: string | null;
-    right?: string | null;
-    bottom?: string | null;
-    height?: string | null;
-    width?: string | null;
-    objectFit?: string | null;
+    hasShadow?: boolean | null;
   };
-  mobileStyle?: {
-    top?: string | null;
-    left?: string | null;
-    right?: string | null;
-    bottom?: string | null;
-  };
-  animation?: IAnimation;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageHeader';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -476,10 +477,52 @@ export interface IFloatingHeader {
     | null;
   style?: {
     inset?: string | null;
+    background?: string | null;
+    width?: string | null;
+    borderRadius?: string | null;
   };
   id?: string | null;
   blockName?: string | null;
   blockType: 'floatingHeader';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IMidFloadHeader".
+ */
+export interface IMidFloadHeader {
+  left?:
+    | {
+        nLink?: INestedLink;
+        id?: string | null;
+      }[]
+    | null;
+  image?: IImageField;
+  right?:
+    | {
+        nLink?: INestedLink;
+        id?: string | null;
+      }[]
+    | null;
+  style?: {
+    inset?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'midFloatHeader';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "INestedLink".
+ */
+export interface INestedLink {
+  name?: string | null;
+  arr?:
+    | {
+        link?: IButton;
+        id?: string | null;
+      }[]
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -518,6 +561,7 @@ export interface IRichTextFooter {
 export interface IFooterDesign2 {
   columnOne?:
     | (
+        | ITextUnderCard
         | ISingleCard
         | IAccordion
         | IHoverCard
@@ -526,17 +570,28 @@ export interface IFooterDesign2 {
         | IButtonBlock
         | IRichText
         | IImage
+        | IVideoLanding
         | IStickyContainers
         | BentoGrid
         | IContactFormBlock
         | ICarousel
         | IFlexItem
+        | IWavyText
         | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCard3
+        | ITGKDoilyCard
+        | ITGKAccordion
+        | ITGKGridIcons
+        | ITGKCardIcon
         | IFlexboxLayout
       )[]
     | null;
   columnTwo?:
     | (
+        | ITextUnderCard
         | ISingleCard
         | IAccordion
         | IHoverCard
@@ -545,17 +600,28 @@ export interface IFooterDesign2 {
         | IButtonBlock
         | IRichText
         | IImage
+        | IVideoLanding
         | IStickyContainers
         | BentoGrid
         | IContactFormBlock
         | ICarousel
         | IFlexItem
+        | IWavyText
         | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCard3
+        | ITGKDoilyCard
+        | ITGKAccordion
+        | ITGKGridIcons
+        | ITGKCardIcon
         | IFlexboxLayout
       )[]
     | null;
   columnThree?:
     | (
+        | ITextUnderCard
         | ISingleCard
         | IAccordion
         | IHoverCard
@@ -564,12 +630,22 @@ export interface IFooterDesign2 {
         | IButtonBlock
         | IRichText
         | IImage
+        | IVideoLanding
         | IStickyContainers
         | BentoGrid
         | IContactFormBlock
         | ICarousel
         | IFlexItem
+        | IWavyText
         | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCard3
+        | ITGKDoilyCard
+        | ITGKAccordion
+        | ITGKGridIcons
+        | ITGKCardIcon
         | IFlexboxLayout
       )[]
     | null;
@@ -586,13 +662,42 @@ export interface IFooterDesign2 {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITextUnderCard".
+ */
+export interface ITextUnderCard {
+  image?: IImageField;
+  richText?: IRichTextField;
+  link?: IButton;
+  style?: {
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+    margin?: string | null;
+    overflow?: string | null;
+  };
+  mobileStyle?: {
+    margin?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textUnderCard';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ISingleCard".
  */
 export interface ISingleCard {
-  content?: {
-    richText?: IRichTextField;
-    image?: IImageField;
-    link?: IButton;
+  image?: IImageField;
+  richText?: IRichTextField;
+  link?: (number | null) | Page;
+  style?: {
+    background?: string | null;
+    width?: string | null;
+    maxWidth?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+    hasShadow?: boolean | null;
   };
   id?: string | null;
   blockName?: string | null;
@@ -624,9 +729,16 @@ export interface IAccordion {
  */
 export interface IIcon {
   name?: string | null;
+  size?: string | null;
   style?: {
+    background?: string | null;
+    margin?: string | null;
+    color?: string | null;
     width?: string | null;
     height?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
+    overflow?: string | null;
     string?: string | null;
   };
 }
@@ -652,14 +764,23 @@ export interface IHoverCard {
  */
 export interface IRichTextCard {
   richText?: IRichTextField;
+  link?: IButton;
   image?: IImageField;
   style?: {
+    selfAlignY?: ('start' | 'center' | 'end' | 'stretch' | 'baseline') | null;
+    selfAlignX?: ('start' | 'center' | 'end' | 'stretch') | null;
     alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
     alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
     borderRadius?: string | null;
     background?: string | null;
+    width?: string | null;
     maxWidth?: string | null;
     border?: string | null;
+    hasShadow?: boolean | null;
+  };
+  mobileStyle?: {
+    selfAlignX?: ('start' | 'center' | 'end' | 'stretch') | null;
+    selfAlignY?: ('start' | 'center' | 'end' | 'stretch' | 'baseline') | null;
   };
   id?: string | null;
   blockName?: string | null;
@@ -701,6 +822,14 @@ export interface IButtonBlock {
  */
 export interface IRichText {
   richText?: IRichTextField;
+  style?: {
+    background?: string | null;
+    padding?: string | null;
+    height?: string | null;
+    width?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'rtBlock';
@@ -711,9 +840,30 @@ export interface IRichText {
  */
 export interface IImage {
   image?: IImageField;
+  style?: {
+    height?: string | null;
+    width?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+    overflow?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'image';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IVideoLanding".
+ */
+export interface IVideoLanding {
+  video?: (number | null) | Asset;
+  richText?: IRichTextField;
+  style?: {
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'videoLanding';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -723,13 +873,28 @@ export interface IStickyContainers {
   title?: string | null;
   list?:
     | {
+        stick?: {
+          bot?: boolean | null;
+          mobile?: boolean | null;
+        };
         richText?: IRichTextField;
         image?: IImageField;
         id?: string | null;
       }[]
     | null;
   style?: {
-    background?: string | null;
+    padding?: string | null;
+    margin?: string | null;
+    gap?: string | null;
+    multiBg?: {
+      /**
+       * comma seperated eg #fff, #d2d2d2
+       */
+      bgs?: string | null;
+      k?: number | null;
+    };
+    border?: string | null;
+    borderRadius?: string | null;
   };
   id?: string | null;
   blockName?: string | null;
@@ -881,9 +1046,6 @@ export interface Form {
       )[]
     | null;
   submitButtonLabel?: string | null;
-  /**
-   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
-   */
   confirmationType?: ('message' | 'redirect') | null;
   confirmationMessage?: {
     root: {
@@ -903,9 +1065,6 @@ export interface Form {
   redirect?: {
     url: string;
   };
-  /**
-   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
-   */
   emails?:
     | {
         emailTo?: string | null;
@@ -914,9 +1073,6 @@ export interface Form {
         replyTo?: string | null;
         emailFrom?: string | null;
         subject: string;
-        /**
-         * Enter the message that should be sent in this email.
-         */
         message?: {
           root: {
             type: string;
@@ -943,9 +1099,27 @@ export interface Form {
  * via the `definition` "ICarousel".
  */
 export interface ICarousel {
-  items?: (IHoverCard | IRichTextCard | ISingleCard | IRichText | IImage | IFlexItem)[] | null;
+  items?:
+    | (
+        | IHoverCard
+        | ITextUnderCard
+        | IRichTextCard
+        | ISingleCard
+        | IRichText
+        | IImage
+        | IFlexItem
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCardIcon
+        | ITGKDoilyCard
+      )[]
+    | null;
   options?: {
     loop?: boolean | null;
+  };
+  style?: {
+    background?: string | null;
+    gap?: string | null;
   };
   id?: string | null;
   blockName?: string | null;
@@ -977,12 +1151,230 @@ export interface IFlexItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKCard1".
+ */
+export interface ITGKCard1 {
+  richText?: IRichTextField;
+  left?: boolean | null;
+  style?: {
+    background?: string | null;
+    color?: string | null;
+    height?: string | null;
+    width?: string | null;
+  };
+  mobileStyles?: {
+    height?: string | null;
+    width?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkCard1';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKCard2".
+ */
+export interface ITGKCard2 {
+  image?: IImageField;
+  richText?: IRichTextField;
+  link?: (number | null) | Page;
+  style?: {
+    background?: string | null;
+    height?: string | null;
+    border?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkCard2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKCardIcon".
+ */
+export interface ITGKCardIcon {
+  arr?:
+    | {
+        icon?: IIcon;
+        richText?: IRichTextField;
+        id?: string | null;
+      }[]
+    | null;
+  style?: {
+    padding?: string | null;
+    background?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
+    width?: string | null;
+    height?: string | null;
+    gap?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkCardIcons';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKDoilyCard".
+ */
+export interface ITGKDoilyCard {
+  bg?: IImageField;
+  img?: IImageField;
+  style?: {
+    padding?: string | null;
+    height?: string | null;
+    width?: string | null;
+    aspectRatio?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkDoilyCard';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IWavyText".
+ */
+export interface IWavyText {
+  text?: string | null;
+  svg?: {
+    clipPath?: string | null;
+    path?: string | null;
+    viewbox?: string | null;
+    strokeColor?: string | null;
+    strokeWidth?: string | null;
+    color?: string | null;
+    background?: string | null;
+    fontSize?: string | null;
+    wordSpacing?: string | null;
+    speed?: string | null;
+  };
+  style?: {
+    height?: string | null;
+    width?: string | null;
+    background?: string | null;
+  };
+  bgImage?: IImageField;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'wavyText';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "EmboldenEpubConverterI".
  */
 export interface EmboldenEpubConverterI {
   id?: string | null;
   blockName?: string | null;
   blockType: 'emboldenEpubConverter';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITextImageSplit".
+ */
+export interface ITextImageSplit {
+  image?: IImageField;
+  richText?: IRichTextField;
+  left?: boolean | null;
+  style?: {
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textImageSplit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKCard3".
+ */
+export interface ITGKCard3 {
+  image?: IImageField;
+  middleText?: IRichTextField;
+  richText?: IRichTextField;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    reference?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    url?: string | null;
+  };
+  style?: {
+    background?: string | null;
+    color?: string | null;
+    padding?: string | null;
+    width?: string | null;
+    maxWidth?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
+  };
+  midStyle?: {
+    background?: string | null;
+    width?: string | null;
+    border?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkCard3';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKAccordion".
+ */
+export interface ITGKAccordion {
+  icon?: IIcon;
+  list?:
+    | {
+        title?: string | null;
+        richText?: IRichTextField;
+        id?: string | null;
+      }[]
+    | null;
+  style?: {
+    background?: string | null;
+    padding?: string | null;
+    gap?: string | null;
+    container?: boolean | null;
+    width?: string | null;
+  };
+  btnStyle?: {
+    padding?: string | null;
+    background?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
+  };
+  dropStyle?: {
+    padding?: string | null;
+    background?: string | null;
+    border?: string | null;
+    borderRadius?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkAccordion';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKGridIcons".
+ */
+export interface ITGKGridIcons {
+  arr?:
+    | {
+        icon?: IIcon;
+        richText?: IRichTextField;
+        id?: string | null;
+      }[]
+    | null;
+  style?: {
+    background?: string | null;
+    padding?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+    gap?: string | null;
+    width?: string | null;
+    container?: boolean | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkGridIcons';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -993,6 +1385,7 @@ export interface IFlexboxLayout {
     | {
         block?:
           | (
+              | ITextUnderCard
               | ISingleCard
               | IAccordion
               | IHoverCard
@@ -1001,28 +1394,133 @@ export interface IFlexboxLayout {
               | IButtonBlock
               | IRichText
               | IImage
+              | IVideoLanding
               | IStickyContainers
               | BentoGrid
               | IContactFormBlock
               | ICarousel
               | IFlexItem
+              | IWavyText
               | EmboldenEpubConverterI
+              | ITextImageSplit
+              | ITGKCard1
+              | ITGKCard2
+              | ITGKCard3
+              | ITGKDoilyCard
+              | ITGKAccordion
+              | ITGKGridIcons
+              | ITGKCardIcon
             )[]
           | null;
         id?: string | null;
       }[]
     | null;
   style?: {
+    padding?: string | null;
+    background?: string | null;
     gap?: string | null;
     alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
     alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
     flexDirection?: string | null;
-    flexWrap?: string | null;
     overflow?: string | null;
   };
+  bgImg?: IImageField;
   id?: string | null;
   blockName?: string | null;
   blockType: 'flexboxLayout';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IGoogleMapFooter".
+ */
+export interface IGoogleMapFooter {
+  logo?: IImageField;
+  list?:
+    | {
+        header?: string | null;
+        horizontal?: boolean | null;
+        links?:
+          | {
+              link?: IButton;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  locations?:
+    | {
+        richText?: IRichTextField;
+        iframe?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  style?: {
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'googleMapFooter';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IFooter3".
+ */
+export interface IFooter3 {
+  logo?: IImageField;
+  madeBy?: boolean | null;
+  list?:
+    | {
+        header?: string | null;
+        horizontal?: boolean | null;
+        links?:
+          | {
+              link?: IButton;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  style?: {
+    background?: string | null;
+    color?: string | null;
+    borderRadius?: string | null;
+  };
+  headerStyles?: {
+    color?: string | null;
+  };
+  bgImg?: IImageField;
+  s?: IStickerField;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'footer3';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IStickerField".
+ */
+export interface IStickerField {
+  url?: (number | null) | Asset;
+  style?: {
+    top?: string | null;
+    left?: string | null;
+    right?: string | null;
+    bottom?: string | null;
+    height?: string | null;
+    width?: string | null;
+    objectFit?: string | null;
+    translate?: string | null;
+  };
+  mobileStyles?: {
+    top?: string | null;
+    left?: string | null;
+    right?: string | null;
+    bottom?: string | null;
+    height?: string | null;
+    width?: string | null;
+    translate?: string | null;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1102,8 +1600,10 @@ export interface IHeroCutout {
  */
 export interface IBlockColumnLayout {
   layout?: ('oneColumn' | 'twoOneThird' | 'oneTwoThird' | 'halfAndHalf' | 'threeColumns') | null;
+  itemHeight?: string | null;
   columnOne?:
     | (
+        | ITextUnderCard
         | ISingleCard
         | IAccordion
         | IHoverCard
@@ -1112,17 +1612,28 @@ export interface IBlockColumnLayout {
         | IButtonBlock
         | IRichText
         | IImage
+        | IVideoLanding
         | IStickyContainers
         | BentoGrid
         | IContactFormBlock
         | ICarousel
         | IFlexItem
+        | IWavyText
         | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCard3
+        | ITGKDoilyCard
+        | ITGKAccordion
+        | ITGKGridIcons
+        | ITGKCardIcon
         | IFlexboxLayout
       )[]
     | null;
   columnTwo?:
     | (
+        | ITextUnderCard
         | ISingleCard
         | IAccordion
         | IHoverCard
@@ -1131,17 +1642,28 @@ export interface IBlockColumnLayout {
         | IButtonBlock
         | IRichText
         | IImage
+        | IVideoLanding
         | IStickyContainers
         | BentoGrid
         | IContactFormBlock
         | ICarousel
         | IFlexItem
+        | IWavyText
         | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCard3
+        | ITGKDoilyCard
+        | ITGKAccordion
+        | ITGKGridIcons
+        | ITGKCardIcon
         | IFlexboxLayout
       )[]
     | null;
   columnThree?:
     | (
+        | ITextUnderCard
         | ISingleCard
         | IAccordion
         | IHoverCard
@@ -1150,18 +1672,29 @@ export interface IBlockColumnLayout {
         | IButtonBlock
         | IRichText
         | IImage
+        | IVideoLanding
         | IStickyContainers
         | BentoGrid
         | IContactFormBlock
         | ICarousel
         | IFlexItem
+        | IWavyText
         | EmboldenEpubConverterI
+        | ITextImageSplit
+        | ITGKCard1
+        | ITGKCard2
+        | ITGKCard3
+        | ITGKDoilyCard
+        | ITGKAccordion
+        | ITGKGridIcons
+        | ITGKCardIcon
         | IFlexboxLayout
       )[]
     | null;
-  bgImage?: IImageField;
   style?: {
     container?: boolean | null;
+    height?: string | null;
+    minHeight?: string | null;
     overflow?: string | null;
     padding?: string | null;
     color?: string | null;
@@ -1172,12 +1705,34 @@ export interface IBlockColumnLayout {
   };
   mobileStyle?: {
     padding?: string | null;
+    gap?: string | null;
+    flexDirection?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
   };
-  animation?: IAnimation;
-  sticker?: IStickerField;
+  bgImage?: IImageField;
+  stickerList?:
+    | {
+        s?: IStickerField;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'blockColumnLayout';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ITGKLandingHome".
+ */
+export interface ITGKLandingHome {
+  imgLeft?: IImageField;
+  imgRight?: IImageField;
+  richText?: IRichTextField;
+  flip?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tgkLandingHome';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1194,6 +1749,45 @@ export interface IGutter {
   id?: string | null;
   blockName?: string | null;
   blockType: 'gutter';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IGutterV2".
+ */
+export interface IGutterV2 {
+  image?: IImageField;
+  style?: {
+    height?: string | null;
+    background?: string | null;
+    color?: string | null;
+    container?: boolean | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+  };
+  s?: IStickerField;
+  bgImg?: IImageField;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gutterv2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IClipGutter".
+ */
+export interface IClipGutter {
+  svg?: {
+    clipPath?: string | null;
+    viewbox?: string | null;
+    background?: string | null;
+  };
+  style?: {
+    background?: string | null;
+    height?: string | null;
+  };
+  bgImage?: IImageField;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'clipGutter';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1216,6 +1810,37 @@ export interface ICalistoFeatureCard {
   id?: string | null;
   blockName?: string | null;
   blockType: 'calistoFeatureCard';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IAnimation".
+ */
+export interface IAnimation {
+  type?: ('viewport' | 'scroll') | null;
+  /**
+   * Animations that trigger when they enter the page
+   */
+  viewport?:
+    | ('slideFadeFast' | 'slideFadeSlow' | 'slideLetters' | 'bubbleLetters' | 'drawSVG' | 'slideUpFadeIn')[]
+    | null;
+  /**
+   * Stagger animations as they enter
+   */
+  stagger?: boolean | null;
+  /**
+   * Only play animations on enter
+   */
+  onlyEnter?: boolean | null;
+  /**
+   * How much of the element must be viewable before starting animation? 0-1
+   */
+  amount?: string | null;
+  /**
+   * Animations that play as you scroll
+   */
+  scroll?:
+    | ('custom' | 'scale' | 'fadeIn' | 'translateUp' | 'translateDown' | 'drawSVG' | 'lineFlip' | 'fadeInEachWord')[]
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1331,10 +1956,70 @@ export interface ISVGText {
  */
 export interface ILexicalMarkerIcon {
   icon?: IIcon;
-  iconifyStyles?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'listMarkerIcon';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IDivider".
+ */
+export interface IDivider {
+  style?: {
+    height?: string | null;
+    width?: string | null;
+    border?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    padding?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'divider';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IRTIcon".
+ */
+export interface IRTIcon {
+  icon?: IIcon;
+  style?: {
+    padding?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lexIcon';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ILexicalImage".
+ */
+export interface ILexicalImage {
+  image?: (number | null) | Asset;
+  alt?: string | null;
+  style?: {
+    padding?: string | null;
+    width?: string | null;
+    height?: string | null;
+    margin?: string | null;
+    alignX?: ('start' | 'center' | 'end' | 'space-around' | 'space-evenly') | null;
+    alignY?: ('start' | 'center' | 'end' | 'stretch') | null;
+    overflow?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lexImg';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IGoogleMaps".
+ */
+export interface IGoogleMaps {
+  iframe?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'googlemaps';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1368,6 +2053,25 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1425,6 +2129,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tenants';
         value: number | Tenant;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1591,6 +2299,7 @@ export interface PagesSelect<T extends boolean = true> {
   meta?: T | ISEOSelect<T>;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1620,6 +2329,23 @@ export interface TenantsSelect<T extends boolean = true> {
 export interface INavigationSelect<T extends boolean = true> {
   header?: T | {};
   footer?: T | {};
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  tenant?: T;
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
